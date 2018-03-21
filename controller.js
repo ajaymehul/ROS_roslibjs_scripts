@@ -1,5 +1,5 @@
 var ros = new ROSLIB.Ros({
-    url : 'ws://192.168.43.80:9090/'
+    url : 'ws://192.168.43.80:9090/' // url of ROS BRIDGE_SERVER Websocket. Different port from ROS Master.
   });
   ros.on('connection', function() {
     console.log('Connected to websocket server.');
@@ -37,6 +37,7 @@ var ros = new ROSLIB.Ros({
    var control_angular_vel = 0;
    var tag = 0;
 document.addEventListener('keydown', function(event) {
+// code below is for controlling or braking the robot
     if(event.keyCode == 37) {
          target_angular_vel = target_angular_vel + 0.1;
                 status = status + 1;
@@ -60,6 +61,8 @@ document.addEventListener('keydown', function(event) {
                 target_angular_vel  = 0;
                 control_angular_vel = 0;
     }
+	//code below is for changing the tag( ID ). Switches to robot ID that needs to be controlled. 0 controls all robots. It brakes the robot whenever control is switched to it.
+
     else if(event.keyCode == 48) {
                 tag = 0;
                 status = status + 1;
@@ -110,7 +113,7 @@ document.addEventListener('keydown', function(event) {
                 control_angular_vel = Math.min( target_angular_vel, control_angular_vel + (0.1/4.0) );}
             else{
                 control_angular_vel = target_angular_vel;}
-    
+    //Updates control and publishes. I put the ID tag on the linear velocity in y direction as y velocity is never used on the turtlebot. Was too lazy to edit the message definition.
 	var twist = new ROSLIB.Message({
     linear : {
       x : control_linear_vel,
